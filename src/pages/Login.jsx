@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { setUserInfo as setUserInfoAction } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -29,8 +31,8 @@ class Login extends React.Component {
     }
   }
 
-  handleClickPlayButton = async () => {
-    const { history } = this.props;
+  handleClickPlayButton = async (name, email) => {
+    const { history, setUserInfo } = this.props;
     const ENDPOINT = 'https://opentdb.com/api_token.php?command=request';
     try {
       const response = await fetch(ENDPOINT);
@@ -38,6 +40,7 @@ class Login extends React.Component {
       history.push('/game');
       const key = 'token';
       localStorage.setItem(key, data.token);
+      setUserInfo({ name, email });
     } catch (error) {
       console.log(error);
     }
@@ -45,6 +48,7 @@ class Login extends React.Component {
 
   render() {
     const { email, name, isDisabled } = this.state;
+    const { history } = this.props;
 
     return (
       <>
@@ -72,18 +76,17 @@ class Login extends React.Component {
           type="button"
           data-testid="btn-play"
           disabled={ isDisabled }
-          onClick={ this.handleClickPlayButton }
+          onClick={ () => this.handleClickPlayButton(name, email) }
         >
           Play
         </button>
-        <Link to="/Configurações">
-          <button
-            type="button"
-            data-testid="btn-settings"
-          >
-            Configurações do jogo
-          </button>
-        </Link>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ () => history.push('/Configurações') }
+        >
+          Configurações do jogo
+        </button>
       </>
     );
   }
@@ -92,7 +95,12 @@ class Login extends React.Component {
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
-  }).isRequired,
-};
+  }),
+  setUserInfo: PropTypes.func,
+}.isRequired;
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  setUserInfo: (userInfo) => dispatch(setUserInfoAction(userInfo)),
+});
+
+export default connect(null, mapDispatchToProps)(Login);
