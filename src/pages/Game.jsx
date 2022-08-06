@@ -8,6 +8,7 @@ class Game extends React.Component {
     super();
     this.state = {
       resultAPI: [],
+      questionNumber: 0,
     };
   }
 
@@ -35,18 +36,65 @@ class Game extends React.Component {
     }
   }
 
+  shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
+  }
+
+  createRandomOptions = () => {
+    const { resultAPI, questionNumber } = this.state;
+    const options = [];
+
+    resultAPI[questionNumber].incorrect_answers.map((answer, i) => {
+      const option = (
+        <button
+          type="button"
+          data-testid={ `wrong-answer-${i}` }
+          key={ i }
+        >
+          { answer }
+        </button>
+      );
+      options.push(option);
+      return option;
+    });
+
+    const correctOpt = (
+      <button type="button" key={ 4 } data-testid="correct-answer">
+        {resultAPI[questionNumber].correct_answer}
+      </button>
+    );
+    options.push(correctOpt);
+
+    const shuffledOptions = this.shuffleArray(options);
+    return shuffledOptions;
+  }
+
   render() {
     const { name, score } = this.props;
+    const { resultAPI, questionNumber } = this.state;
 
-    const { resultAPI } = this.state;
     return (
       <div>
+        <img
+          src={ this.createImageSrc() }
+          alt="user"
+          data-testid="header-profile-picture"
+        />
+        <p data-testid="header-player-name">{ name }</p>
+        <p data-testid="header-score">{ score }</p>
         { resultAPI.length > 0 && (
           <>
-            <p>{resultAPI[0].category}</p>
-            <p>{resultAPI[0].question}</p>
-            <button />
-            <button />
+            <p data-testid="question-category">{resultAPI[questionNumber].category}</p>
+            <p data-testid="question-text">{resultAPI[questionNumber].question}</p>
+            <div data-testid="answer-options">
+              { this.createRandomOptions() }
+            </div>
           </>
         )}
       </div>

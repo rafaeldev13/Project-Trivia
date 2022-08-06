@@ -37,10 +37,10 @@ class Login extends React.Component {
     try {
       const response = await fetch(ENDPOINT);
       const data = await response.json();
-      history.push('/game');
       const key = 'token';
       localStorage.setItem(key, data.token);
       setUserInfo({ name, email });
+      history.push('/game');
     } catch (error) {
       console.log(error);
     }
