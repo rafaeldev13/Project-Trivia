@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
+import he from 'he';
 
 class Game extends React.Component {
   constructor() {
@@ -56,6 +57,8 @@ class Game extends React.Component {
           type="button"
           data-testid={ `wrong-answer-${i}` }
           key={ i }
+          onClick={ (e) => this.changeOptionsColors(e) }
+          name="incorrect"
         >
           { answer }
         </button>
@@ -65,7 +68,13 @@ class Game extends React.Component {
     });
 
     const correctOpt = (
-      <button type="button" key={ 4 } data-testid="correct-answer">
+      <button
+        type="button"
+        key={ 4 }
+        data-testid="correct-answer"
+        name="correct"
+        onClick={ (e) => this.changeOptionsColors(e) }
+      >
         {resultAPI[questionNumber].correct_answer}
       </button>
     );
@@ -73,6 +82,19 @@ class Game extends React.Component {
 
     const shuffledOptions = this.shuffleArray(options);
     return shuffledOptions;
+  }
+
+  changeOptionsColors = ({ target }) => {
+    const parent = target.parentElement;
+    const optionsArray = [...parent.children];
+    optionsArray.map((option) => {
+      if (option.name === 'incorrect') {
+        option.classList.add('red-border');
+      } else {
+        option.classList.add('green-border');
+      }
+      return option;
+    });
   }
 
   render() {
@@ -91,7 +113,9 @@ class Game extends React.Component {
         { resultAPI.length > 0 && (
           <>
             <p data-testid="question-category">{resultAPI[questionNumber].category}</p>
-            <p data-testid="question-text">{resultAPI[questionNumber].question}</p>
+            <p data-testid="question-text">
+              {he.decode(resultAPI[questionNumber].question)}
+            </p>
             <div data-testid="answer-options">
               { this.createRandomOptions() }
             </div>
