@@ -1,0 +1,93 @@
+.pageContainer {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  height: 85vh;
+  justify-content: center;
+  width: 100vw;
+}
+
+.title {
+  animation: neon 5s linear infinite;
+  color: transparent;
+  font-family: Poppins , sans-serif;
+  font-size: 15rem;
+  font-weight: 800;
+  margin: 0;
+  -webkit-text-stroke: 3px #bc3232ae;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.loginContainer {
+  color: #626a7b;
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px #0f1015 inset;
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.input {
+  background-color: #0f1015;
+  border: 0;
+  border-radius: 0.7rem;
+  box-sizing: border-box;
+  color: white;
+  font-family: Poppins , sans-serif;
+  outline-color: #20232f;
+  padding: 1rem 4rem 1rem 2rem;
+  width: 100%;
+}
+
+.buttonContainer {
+  border: 0;
+  display: flex;
+  flex-basis: 100%;
+  gap: 1rem;
+}
+
+.buttonContainer button {
+  background-color: #0f1015;
+  border: 0;
+  border-radius: 0.7rem;
+  color: #626a7b;
+  cursor: pointer;
+  flex: 1;
+  font-family: Poppins , sans-serif;
+  font-weight: 600;
+  padding: 0.8rem;
+}
+
+.buttonContainer button:disabled {
+  background-color: #0f1015a7;
+  color: #2f333b;
+}
+
+@keyframes neon {
+
+  0%, 18%, 20%, 50.1%, 60%, 65.1%, 66% {
+    background-color: transparent;
+    text-shadow: none;
+  }
+
+  18.1%, 20.1%, 30%, 50%, 60.1%, 65%, 66.1%, 100% {
+    text-shadow: 0 0 10px #872121ae , 0
+      0 20px #902121ae , 0
+      0 40px #871d1dae , 0
+      0 80px #962121ae , 0
+      0 160px #9e2121ae , 0
+      0 320px #b91010ae , 0
+      0 640px #951818ae;
+  }
+}

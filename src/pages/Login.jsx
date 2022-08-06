@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { setUserInfo as setUserInfoAction } from '../redux/actions';
 
+import '../styles/login.css';
+
 class Login extends React.Component {
   constructor() {
     super();
@@ -51,43 +53,54 @@ class Login extends React.Component {
     const { history } = this.props;
 
     return (
-      <>
-        <label htmlFor="email">
-          Email:
-          <input
-            type="email"
-            id="email"
-            data-testid="input-gravatar-email"
-            value={ email }
-            onChange={ this.handleInputChange }
-          />
-        </label>
-        <label htmlFor="name">
-          Nome:
-          <input
-            type="text"
-            id="name"
-            data-testid="input-player-name"
-            value={ name }
-            onChange={ this.handleInputChange }
-          />
-        </label>
-        <button
-          type="button"
-          data-testid="btn-play"
-          disabled={ isDisabled }
-          onClick={ () => this.handleClickPlayButton(name, email) }
-        >
-          Play
-        </button>
-        <button
-          type="button"
-          data-testid="btn-settings"
-          onClick={ () => history.push('/Configurações') }
-        >
-          Configurações do jogo
-        </button>
-      </>
+      <div className="pageContainer">
+        <h1 className="title">Quiz</h1>
+        <div className="infoContainer">
+          <div className="loginContainer">
+            <label htmlFor="email">
+              <input
+                type="email"
+                id="email"
+                className="input"
+                data-testid="input-gravatar-email"
+                placeholder="Email"
+                autoComplete="off"
+                value={ email }
+                onChange={ this.handleInputChange }
+              />
+            </label>
+            <label htmlFor="name">
+              <input
+                type="text"
+                id="name"
+                className="input"
+                data-testid="input-player-name"
+                placeholder="Nome"
+                autoComplete="off"
+                value={ name }
+                onChange={ this.handleInputChange }
+              />
+            </label>
+          </div>
+          <div className="buttonContainer">
+            <button
+              type="button"
+              data-testid="btn-play"
+              disabled={ isDisabled }
+              onClick={ () => this.handleClickPlayButton(name, email) }
+            >
+              Play
+            </button>
+            <button
+              type="button"
+              data-testid="btn-settings"
+              onClick={ () => history.push('/Configurações') }
+            >
+              Configurações
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 }
