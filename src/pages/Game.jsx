@@ -4,12 +4,6 @@ import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 
 class Game extends React.Component {
-  createImageSrc = () => {
-    const { email } = this.props;
-    const hash = md5(email).toString();
-    return `https://www.gravatar.com/avatar/${hash}`;
-  }
-
   constructor() {
     super();
     this.state = {
@@ -19,6 +13,12 @@ class Game extends React.Component {
 
   componentDidMount() {
     this.callingAPI();
+  }
+
+  createImageSrc = () => {
+    const { email } = this.props;
+    const hash = md5(email).toString();
+    return `https://www.gravatar.com/avatar/${hash}`;
   }
 
   callingAPI = async () => {
