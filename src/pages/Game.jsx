@@ -98,7 +98,7 @@ class Game extends React.Component {
         name="incorrect"
         disabled={ isDisabled }
       >
-        { answer }
+        {he.decode(answer)}
       </button>
     );
 
@@ -117,7 +117,7 @@ class Game extends React.Component {
         ref={ this.myRef }
         disabled={ isDisabled }
       >
-        {answer}
+        {he.decode(answer)}
       </button>
     );
     return correctOpt;
