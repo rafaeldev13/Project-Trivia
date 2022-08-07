@@ -1,4 +1,4 @@
-import { SET_USER_INFO } from '../actions';
+import { SET_USER_INFO, SET_SCORE } from '../actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   gravatarEmail: '',
 };
 
-const userReducer = (state = INITIAL_STATE, action) => {
+const playerReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case SET_USER_INFO:
     return {
@@ -15,9 +15,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
       gravatarEmail: action.userInfo.email,
       name: action.userInfo.name,
     };
+  case SET_SCORE:
+    return {
+      ...state,
+      score: state.score + action.score,
+    };
   default:
     return state;
   }
 };
 
-export default userReducer;
+export default playerReducer;
