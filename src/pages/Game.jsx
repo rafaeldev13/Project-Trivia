@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import md5 from 'crypto-js/md5';
 import he from 'he';
 
 import { setScore as setScoreAction } from '../redux/actions';
+import { createImageSrc, shuffleArray } from '../functions/gameFunctions';
+import '../styles/game.css';
 
 class Game extends React.Component {
   constructor() {
@@ -49,46 +50,26 @@ class Game extends React.Component {
     });
   }
 
-  createImageSrc = () => {
-    const { email } = this.props;
-    const hash = md5(email).toString();
-    return `https://www.gravatar.com/avatar/${hash}`;
-  }
-
   callingAPI = async () => {
     const myItem = localStorage.getItem('token');
     const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${myItem}`);
     const data = await response.json();
-
     if (data.results.length === 0) {
       const { history } = this.props;
       localStorage.removeItem('token');
       history.push('/');
     } else {
-      console.log('chamei api');
       this.setState({ resultAPI: data.results }, this.createRandomOptions);
     }
   }
 
   initializeTimer = () => {
-    console.log('inicializei o timer');
     const ONE_SECOND = 1000;
     const intervalId = setInterval(() => {
       const { timer } = this.state;
       this.setState({ timer: timer - 1 });
     }, ONE_SECOND);
-    // é necessário inserir o intervalId no state para poder parar ele
     this.setState({ intervalId });
-  }
-
-  shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
   }
 
   createIncorrectOption = (answer, i) => {
@@ -102,12 +83,10 @@ class Game extends React.Component {
         name="incorrect"
         disabled={ isDisabled }
       >
-        {/*  a biblioteca 'he' serve para transformar simbolos como esse: &quot,
-        em símbolos html normal */}
+        {/* a biblioteca 'he' serve para transformar simbolos: &quot, em html normal */}
         {he.decode(answer)}
       </button>
     );
-
     return incorrectOpt;
   }
 
@@ -140,9 +119,11 @@ class Game extends React.Component {
     const answer = resultAPI[questionNumber].correct_answer;
     options.push(this.createCorrectOption(answer));
 
-    shuffledOptions = this.shuffleArray(options);
-    console.log('embaralhei as resposta e adicionei na tela');
-    this.setState({ shuffledOptions }, this.initializeTimer);
+    shuffledOptions = shuffleArray(options);
+    this.setState({ shuffledOptions }, () => {
+      this.setButtonsToDefault();
+      this.initializeTimer();
+    });
   }
 
   changeOptionsColors = (target) => {
@@ -158,15 +139,12 @@ class Game extends React.Component {
         option.classList.add('green-border');
       }
     });
-
-    console.log('botei as bordas');
     this.setState({ isDisabled: true }, this.disableButton);
-
     const isCorrect = target.name === 'correct';
     this.updateScore(isCorrect);
   }
 
-  updateScore(isCorrect) {
+  updateScore = (isCorrect) => {
     if (isCorrect) {
       const { timer, resultAPI, questionNumber } = this.state;
       const { setScore } = this.props;
@@ -186,21 +164,43 @@ class Game extends React.Component {
       default:
         difficulty = 0;
       }
-
       const number = 10;
       const newScore = number + (timer * difficulty);
       setScore(newScore);
     }
   }
 
+  setNextQuestion = () => {
+    const { questionNumber } = this.state;
+    const numberOfQuestions = 4;
+    if (questionNumber < numberOfQuestions) {
+      this.setState({
+        isDisabled: false, timer: 30, questionNumber: questionNumber + 1,
+      }, this.createRandomOptions);
+    } else {
+      const { history } = this.props;
+      history.push('/feedback');
+    }
+  }
+
+  setButtonsToDefault = () => {
+    const parent = this.myRef.current;
+    const options = [...parent.children];
+    options.forEach((opt) => {
+      opt.disabled = false;
+      opt.classList.remove('red-border');
+      opt.classList.remove('green-border');
+    });
+  }
+
   render() {
-    const { name, score } = this.props;
-    const { resultAPI, questionNumber, timer, shuffledOptions } = this.state;
+    const { name, score, email } = this.props;
+    const { resultAPI, questionNumber, timer, shuffledOptions, isDisabled } = this.state;
 
     return (
-      <div>
+      <div className="gamePageContainer">
         <img
-          src={ this.createImageSrc() }
+          src={ createImageSrc(email) }
           alt="user"
           data-testid="header-profile-picture"
         />
@@ -218,6 +218,10 @@ class Game extends React.Component {
             </div>
           </>
         )}
+        {isDisabled && (
+          <button type="button" data-testid="btn-next" onClick={ this.setNextQuestion }>
+            Next
+          </button>)}
       </div>
     );
   }
