@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 import he from 'he';
 
+import { setScore as setScoreAction } from '../redux/actions';
+
 class Game extends React.Component {
   constructor() {
     super();
@@ -33,12 +35,14 @@ class Game extends React.Component {
 
   setAsIncorrect = () => {
     // pegando o elemento através do Ref
-    const optElement = this.myRef.current;
+    const optionsParent = this.myRef.current;
+    const optionsArray = [...optionsParent.children];
+    const optElement = optionsArray.find((option) => option.name === 'incorrect');
     this.changeOptionsColors(optElement);
   }
 
   disableButton = () => {
-    const parent = this.myRef.current.parentElement;
+    const parent = this.myRef.current;
     const options = [...parent.children];
     options.forEach((opt) => {
       opt.disabled = true;
@@ -98,6 +102,8 @@ class Game extends React.Component {
         name="incorrect"
         disabled={ isDisabled }
       >
+        {/*  a biblioteca 'he' serve para transformar simbolos como esse: &quot,
+        em símbolos html normal */}
         {he.decode(answer)}
       </button>
     );
@@ -114,7 +120,6 @@ class Game extends React.Component {
         data-testid="correct-answer"
         name="correct"
         onClick={ (e) => this.changeOptionsColors(e.target) }
-        ref={ this.myRef }
         disabled={ isDisabled }
       >
         {he.decode(answer)}
@@ -153,8 +158,39 @@ class Game extends React.Component {
         option.classList.add('green-border');
       }
     });
+
     console.log('botei as bordas');
     this.setState({ isDisabled: true }, this.disableButton);
+
+    const isCorrect = target.name === 'correct';
+    this.updateScore(isCorrect);
+  }
+
+  updateScore(isCorrect) {
+    if (isCorrect) {
+      const { timer, resultAPI, questionNumber } = this.state;
+      const { setScore } = this.props;
+      let { difficulty } = resultAPI[questionNumber];
+      const hightestScore = 3;
+
+      switch (difficulty) {
+      case 'easy':
+        difficulty = 1;
+        break;
+      case 'medium':
+        difficulty = 2;
+        break;
+      case 'hard':
+        difficulty = hightestScore;
+        break;
+      default:
+        difficulty = 0;
+      }
+
+      const number = 10;
+      const newScore = number + (timer * difficulty);
+      setScore(newScore);
+    }
   }
 
   render() {
@@ -177,7 +213,7 @@ class Game extends React.Component {
             <p data-testid="question-text">
               {he.decode(resultAPI[questionNumber].question)}
             </p>
-            <div data-testid="answer-options">
+            <div data-testid="answer-options" ref={ this.myRef }>
               { shuffledOptions }
             </div>
           </>
@@ -191,18 +227,19 @@ Game.propTypes = {
   name: PropTypes.string,
   email: PropTypes.string,
   score: PropTypes.number,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }),
 }.isRequired;
 
 const mapStateToProps = (state) => ({
-  name: state.userInfo.name,
-  email: state.userInfo.gravatarEmail,
-  score: state.userInfo.score,
+  name: state.player.name,
+  email: state.player.gravatarEmail,
+  score: state.player.score,
 });
 
-Game.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-};
+const mapDispatchToProps = (dispatch) => ({
+  setScore: (score) => dispatch(setScoreAction(score)),
+});
 
-export default connect(mapStateToProps)(Game);
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
