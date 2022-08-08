@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import Header from './Header';
 
 class Feedback extends React.Component {
+  handlePlayAgain = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
+
   render() {
     const { assertions, score } = this.props;
     const THREE = 3;
@@ -18,6 +23,14 @@ class Feedback extends React.Component {
         </p>
         <p data-testid="feedback-total-score">{score}</p>
         <p data-testid="feedback-total-question">{assertions}</p>
+        <button
+          type="button"
+          data-testid="btn-play-again"
+          onClick={ this.handlePlayAgain }
+        >
+          Play Again
+
+        </button>
       </div>
     );
   }
@@ -29,6 +42,9 @@ const mapStateToProps = (state) => ({
 });
 
 Feedback.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
 };
