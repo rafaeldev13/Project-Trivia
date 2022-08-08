@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 class Feedback extends React.Component {
   render() {
-    const { assertions } = this.props;
+    const { assertions, score } = this.props;
     const THREE = 3;
     return (
       <div>
@@ -14,6 +14,8 @@ class Feedback extends React.Component {
             ? <span data-testid="feedback-text">Could be better...</span>
             : <span data-testid="feedback-text">Well Done!</span>}
         </p>
+        <p data-testid="feedback-total-score">{score}</p>
+        <p data-testid="feedback-total-question">{assertions}</p>
       </div>
     );
   }
@@ -21,10 +23,12 @@ class Feedback extends React.Component {
 
 const mapStateToProps = (state) => ({
   assertions: state.player.assertions,
+  score: state.player.score,
 });
 
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps)(Feedback);
