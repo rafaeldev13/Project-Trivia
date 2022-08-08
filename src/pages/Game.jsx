@@ -75,6 +75,7 @@ class Game extends React.Component {
         key={ i }
         onClick={ (e) => this.changeOptionsColors(e.target) }
         name="incorrect"
+        className="answer-button"
         disabled={ false }
       >
         {/* a biblioteca 'he' serve para transformar simbolos: &quot, em html normal */}
@@ -91,6 +92,7 @@ class Game extends React.Component {
         key={ 4 }
         data-testid="correct-answer"
         name="correct"
+        className="answer-button"
         onClick={ (e) => this.changeOptionsColors(e.target) }
         disabled={ false }
       >
@@ -122,7 +124,6 @@ class Game extends React.Component {
   changeOptionsColors = (target) => {
     const { intervalId } = this.state;
     clearInterval(intervalId);
-
     const parent = target.parentElement;
     const optionsArray = [...parent.children];
     optionsArray.forEach((option) => {
@@ -145,7 +146,6 @@ class Game extends React.Component {
       const { setScore } = this.props;
       let { difficulty } = resultAPI[questionNumber];
       const hightestScore = 3;
-
       switch (difficulty) {
       case 'easy':
         difficulty = 1;
@@ -207,14 +207,18 @@ class Game extends React.Component {
               { timer }
             </div>
             { resultAPI.length > 0 && (
-              <>
+              <div className="centralize-question">
                 <p data-testid="question-text" className="question-text">
                   {he.decode(resultAPI[questionNumber].question)}
                 </p>
-                <div data-testid="answer-options" ref={ this.myRef }>
+                <div
+                  data-testid="answer-options"
+                  ref={ this.myRef }
+                  className="answer-options"
+                >
                   { shuffledOptions }
                 </div>
-              </>
+              </div>
             )}
           </div>
           {isDisabled && (

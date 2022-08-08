@@ -1,7 +1,7 @@
 import { SET_USER_INFO, SET_SCORE } from '../actions';
 
 const INITIAL_STATE = {
-  name: 'Carlão',
+  name: '',
   assertions: 0,
   score: 0,
   gravatarEmail: '',

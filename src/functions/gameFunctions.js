@@ -17,7 +17,8 @@ export const disableButton = (parent) => {
 
 const getBarElement = (optParents) => {
   const questionContainer = optParents.parentElement;
-  const bar = questionContainer.firstChild;
+  const centralize = questionContainer.parentElement;
+  const bar = centralize.firstChild;
   return bar;
 };
 
