@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import Header from './Header';
 
 class Feedback extends React.Component {
-  handlePlayAgain = () => {
+  handleRedirectTo = (route) => {
     const { history } = this.props;
-    history.push('/');
-  };
+    if (route) {
+      history.push(`/${route}`);
+    } else {
+      history.push('/');
+    }
+  }
 
   render() {
     const { assertions, score } = this.props;
@@ -25,9 +29,17 @@ class Feedback extends React.Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ this.handlePlayAgain }
+          onClick={ () => this.handleRedirectTo() }
         >
           Play Again
+
+        </button>
+        <button
+          type="button"
+          data-testid="btn-ranking"
+          onClick={ () => this.handleRedirectTo('ranking') }
+        >
+          Ranking
 
         </button>
       </div>
