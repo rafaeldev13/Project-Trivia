@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import he from 'he';
 
 import { setScore as setScoreAction } from '../redux/actions';
-import { createImageSrc, shuffleArray } from '../functions/gameFunctions';
+import {
+  shuffleArray, disableButton, setAnimation, stopAnimation, removeAnimation,
+} from '../functions/gameFunctions';
+import QuizHeader from '../components/QuizHeader';
 import '../styles/game.css';
 
 class Game extends React.Component {
@@ -27,27 +30,17 @@ class Game extends React.Component {
 
   componentDidUpdate() {
     const { timer, isDisabled } = this.state;
-    // é necessário usar os isDisabled, pois caso contrário,
-    // ele ficará entrando continuamente no if, se o timer for igual a zero
+    // é necessário usar os isDisabled, para não ficar em loop infinito
     if (timer === 0 && isDisabled === false) {
       this.setAsIncorrect();
     }
   }
 
   setAsIncorrect = () => {
-    // pegando o elemento através do Ref
     const optionsParent = this.myRef.current;
     const optionsArray = [...optionsParent.children];
     const optElement = optionsArray.find((option) => option.name === 'incorrect');
     this.changeOptionsColors(optElement);
-  }
-
-  disableButton = () => {
-    const parent = this.myRef.current;
-    const options = [...parent.children];
-    options.forEach((opt) => {
-      opt.disabled = true;
-    });
   }
 
   callingAPI = async () => {
@@ -64,16 +57,17 @@ class Game extends React.Component {
   }
 
   initializeTimer = () => {
+    const optionsParent = this.myRef.current;
     const ONE_SECOND = 1000;
     const intervalId = setInterval(() => {
       const { timer } = this.state;
       this.setState({ timer: timer - 1 });
     }, ONE_SECOND);
     this.setState({ intervalId });
+    setAnimation(optionsParent);
   }
 
   createIncorrectOption = (answer, i) => {
-    const { isDisabled } = this.state;
     const incorrectOpt = (
       <button
         type="button"
@@ -81,7 +75,7 @@ class Game extends React.Component {
         key={ i }
         onClick={ (e) => this.changeOptionsColors(e.target) }
         name="incorrect"
-        disabled={ isDisabled }
+        disabled={ false }
       >
         {/* a biblioteca 'he' serve para transformar simbolos: &quot, em html normal */}
         {he.decode(answer)}
@@ -91,7 +85,6 @@ class Game extends React.Component {
   }
 
   createCorrectOption = (answer) => {
-    const { isDisabled } = this.state;
     const correctOpt = (
       <button
         type="button"
@@ -99,7 +92,7 @@ class Game extends React.Component {
         data-testid="correct-answer"
         name="correct"
         onClick={ (e) => this.changeOptionsColors(e.target) }
-        disabled={ isDisabled }
+        disabled={ false }
       >
         {he.decode(answer)}
       </button>
@@ -139,9 +132,11 @@ class Game extends React.Component {
         option.classList.add('green-border');
       }
     });
-    this.setState({ isDisabled: true }, this.disableButton);
+    const optParent = this.myRef.current;
+    this.setState({ isDisabled: true }, () => disableButton(optParent));
     const isCorrect = target.name === 'correct';
     this.updateScore(isCorrect);
+    stopAnimation(optParent);
   }
 
   updateScore = (isCorrect) => {
@@ -191,59 +186,60 @@ class Game extends React.Component {
       opt.classList.remove('red-border');
       opt.classList.remove('green-border');
     });
+    removeAnimation(parent);
   }
 
   render() {
-    const { name, score, email } = this.props;
     const { resultAPI, questionNumber, timer, shuffledOptions, isDisabled } = this.state;
 
     return (
-      <div className="gamePageContainer">
-        <img
-          src={ createImageSrc(email) }
-          alt="user"
-          data-testid="header-profile-picture"
-        />
-        <p data-testid="header-player-name">{ name }</p>
-        <p data-testid="header-score">{ score }</p>
-        <p>{ timer }</p>
-        { resultAPI.length > 0 && (
-          <>
-            <p data-testid="question-category">{resultAPI[questionNumber].category}</p>
-            <p data-testid="question-text">
-              {he.decode(resultAPI[questionNumber].question)}
+      <div className="game-page-container">
+        <div className="quiz-container">
+          <QuizHeader />
+          { resultAPI.length > 0 && (
+            <p data-testid="question-category" className="category">
+              {resultAPI[questionNumber].category}
             </p>
-            <div data-testid="answer-options" ref={ this.myRef }>
-              { shuffledOptions }
+          )}
+          <div className="questions-container">
+            <div className="timer-bar" />
+            <div className="timer-number">
+              { timer }
             </div>
-          </>
-        )}
-        {isDisabled && (
-          <button type="button" data-testid="btn-next" onClick={ this.setNextQuestion }>
-            Next
-          </button>)}
+            { resultAPI.length > 0 && (
+              <>
+                <p data-testid="question-text" className="question-text">
+                  {he.decode(resultAPI[questionNumber].question)}
+                </p>
+                <div data-testid="answer-options" ref={ this.myRef }>
+                  { shuffledOptions }
+                </div>
+              </>
+            )}
+          </div>
+          {isDisabled && (
+            <button
+              type="button"
+              data-testid="btn-next"
+              onClick={ this.setNextQuestion }
+              className="next-button"
+            >
+              Next
+            </button>)}
+        </div>
       </div>
     );
   }
 }
 
 Game.propTypes = {
-  name: PropTypes.string,
-  email: PropTypes.string,
-  score: PropTypes.number,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }),
 }.isRequired;
 
-const mapStateToProps = (state) => ({
-  name: state.player.name,
-  email: state.player.gravatarEmail,
-  score: state.player.score,
-});
-
 const mapDispatchToProps = (dispatch) => ({
   setScore: (score) => dispatch(setScoreAction(score)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default connect(null, mapDispatchToProps)(Game);

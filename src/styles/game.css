@@ -1,3 +1,131 @@
-.gamePageContainer {
-  color: white;
+.game-page-container {
+  align-items: center;
+  color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  font-family: Poppins , sans-serif;
+  height: 100vh;
+  justify-content: center;
+}
+
+.game-header {
+  align-items: center;
+  background-color: #1c1f29;
+  display: flex;
+  height: 5rem;
+  width: 100%;
+}
+
+.game-header img {
+  border-radius: 50%;
+  height: 50%;
+  margin: 0 1rem 0 3rem;
+}
+
+.player-name {
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.header-score-container {
+  align-items: center;
+  background-color: #14161e;
+  border-radius: 1rem;
+  display: flex;
+  font-weight: 600;
+  height: 60%;
+  justify-content: center;
+  margin-right: 3rem;
+  width: 10rem;
+}
+
+.quiz-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 2rem;
+  width: 100vw;
+}
+
+.category {
+  align-self: flex-end;
+  font-weight: 500;
+  margin: 0 3.8rem 0 0;
+}
+
+.questions-container {
+  background-color: #1c1f29;
+  border-radius: 0 0 3rem 3rem;
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  width: 70%;
+}
+
+.timer-bar {
+  background-color: #3d4152;
+  height: 1rem;
+  width: 0;
+}
+
+.bar-animation {
+  animation: timer 30s linear forwards;
+}
+
+.stop-animation {
+  animation-play-state: paused;
+}
+
+.timer-number {
+  align-items: center;
+  background-color: #14161e;
+  border-radius: 4rem;
+  display: flex;
+  font-weight: 500;
+  height: 3rem;
+  justify-content: center;
+  margin: 2rem 0 0 1rem;
+  width: 5rem;
+}
+
+.question-text {
+  align-self: center;
+}
+
+.next-button {
+  align-self: center;
+  background-color: #1c1f29;
+  border: 0;
+  border-radius: 0.7rem;
+  color: #f4f4f4;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.8rem 0;
+  transition: 0.2s ease-in;
+  width: 20rem;
+}
+
+.next-button:hover {
+  background-color: #252936;
+}
+
+@keyframes timer {
+
+  0% {
+    width: 0%;
+  }
+
+  75% {
+    background-color: #3d4152;
+  }
+
+  80% {
+    background-color: #612828;
+  }
+
+  100% {
+    background-color: #612828;
+    width: 100%;
+  }
 }
