@@ -2,21 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import md5 from 'crypto-js/md5';
+import { createImageSrc } from '../functions/gameFunctions';
 
 class QuizHeader extends React.Component {
-  createImageSrc = (email) => {
-    const hash = md5(email).toString();
-    return `https://www.gravatar.com/avatar/${hash}`;
-  };
-
   render() {
     const { name, score, email } = this.props;
 
     return (
       <div className="game-header">
         <img
-          src={ this.createImageSrc(email) }
+          src={ createImageSrc(email) }
           alt="user"
           data-testid="header-profile-picture"
         />

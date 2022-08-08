@@ -15,7 +15,6 @@ class Feedback extends React.Component {
     return (
       <div>
         <Header />
-        <div data-testid="feedback-text">Nice Brotha</div>
         <p>
           {assertions < THREE
             ? <span data-testid="feedback-text">Could be better...</span>
