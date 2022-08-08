@@ -19,6 +19,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: state.score + action.score,
+      assertions: state.assertions + 1,
     };
   default:
     return state;
