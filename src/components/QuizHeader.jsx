@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { createImageSrc } from '../functions/gameFunctions';
+import '../styles/quizHeader.css';
 
 class QuizHeader extends React.Component {
   render() {

@@ -1,0 +1,31 @@
+.game-header {
+  align-items: center;
+  background-color: #1c1f29;
+  display: flex;
+  font-family: Poppins , sans-serif;
+  height: 5rem;
+  width: 100%;
+}
+
+.game-header img {
+  border-radius: 50%;
+  height: 50%;
+  margin: 0 1rem 0 3rem;
+}
+
+.player-name {
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.header-score-container {
+  align-items: center;
+  background-color: #14161e;
+  border-radius: 1rem;
+  display: flex;
+  font-weight: 600;
+  height: 60%;
+  justify-content: center;
+  margin-right: 3rem;
+  width: 10rem;
+}

@@ -5,6 +5,8 @@ import QuizHeader from '../components/QuizHeader';
 import { createImageSrc } from '../functions/gameFunctions';
 import { clearPlayer } from '../redux/actions';
 
+import '../styles/feedback.css';
+
 class Feedback extends React.Component {
   componentDidMount() {
     const { name, score, email } = this.props;
@@ -33,31 +35,67 @@ class Feedback extends React.Component {
     const { assertions, score } = this.props;
     const THREE = 3;
     return (
-      <div>
+      <div className="feedback-page-container">
         <QuizHeader />
-        <p>
-          {assertions < THREE
-            ? <span data-testid="feedback-text">Could be better...</span>
-            : <span data-testid="feedback-text">Well Done!</span>}
-        </p>
-        <p data-testid="feedback-total-score">{score}</p>
-        <p data-testid="feedback-total-question">{assertions}</p>
-        <button
-          type="button"
-          data-testid="btn-play-again"
-          onClick={ () => this.handleRedirectTo() }
-        >
-          Play Again
-
-        </button>
-        <button
-          type="button"
-          data-testid="btn-ranking"
-          onClick={ () => this.handleRedirectTo('ranking') }
-        >
-          Ranking
-
-        </button>
+        <div className="feedback-container">
+          <p className="feedback-text">
+            {assertions < THREE
+              ? (
+                <span
+                  data-testid="feedback-text"
+                  className="bad-played"
+                >
+                  Could be better...
+                </span>
+              )
+              : (
+                <span
+                  data-testid="feedback-text"
+                  className="well-played"
+                >
+                  Well Done!
+                </span>
+              )}
+          </p>
+          <div className="feedback-data-container">
+            <div className="feedback-data">
+              <p className="feedback-data-text">Score:</p>
+              <div
+                className="feedback-data-number"
+                data-testid="feedback-total-score"
+              >
+                {score}
+              </div>
+            </div>
+            <div className="feedback-data">
+              <p className="feedback-data-text">Assertions:</p>
+              <p
+                className="feedback-data-number"
+                data-testid="feedback-total-question"
+              >
+                {assertions}
+              </p>
+            </div>
+          </div>
+          <div className="buttons-container">
+            <button
+              type="button"
+              data-testid="btn-play-again"
+              className="feedback-button"
+              onClick={ () => this.handleRedirectTo() }
+            >
+              Play Again
+            </button>
+            <button
+              type="button"
+              data-testid="btn-ranking"
+              className="feedback-button"
+              onClick={ () => this.handleRedirectTo('ranking') }
+            >
+              Ranking
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
