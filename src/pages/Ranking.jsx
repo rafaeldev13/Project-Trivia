@@ -29,10 +29,10 @@ class Ranking extends React.Component {
     const { playerInfos } = this.state;
     return (
       <section>
+        <div data-testid="ranking-title" className="ranking-title">
+          <h3>Ranking</h3>
+        </div>
         <div className="box">
-          <div data-testid="ranking-title">
-            <h3>Ranking</h3>
-          </div>
           { playerInfos.map((player, i) => (
             <div className="list" key={ i }>
               <div className="imgBx">
@@ -40,7 +40,7 @@ class Ranking extends React.Component {
               </div>
               <div className="content">
                 <h2 className="rank">
-                  <small>#</small>
+                  <small className="hashtag">#</small>
                   { i + 1 }
                 </h2>
                 <h4 data-testid={ `player-name-${i}` }>{ player.name }</h4>
@@ -52,6 +52,7 @@ class Ranking extends React.Component {
         <button
           type="button"
           data-testid="btn-go-home"
+          className="home-button"
           onClick={ () => this.HandleClickBackToLogin() }
         >
           Voltar para Home

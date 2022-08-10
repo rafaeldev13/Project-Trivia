@@ -1,9 +1,9 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import renderWithRouterAndRedux from './renderWithRouterAndRedux';
-import Feedback from '../../pages/Feedback'
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
+import Feedback from '../pages/Feedback'
 import userEvent from '@testing-library/user-event';
-import App from '../../App'
+import App from '../App'
 
 const INITIAL_STATE = {
     player: {

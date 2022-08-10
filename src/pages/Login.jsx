@@ -54,7 +54,7 @@ class Login extends React.Component {
 
     return (
       <div className="pageContainer">
-        <h1 className="title">Quiz</h1>
+        <h1 className="title">Quiz!?</h1>
         <div className="infoContainer">
           <div className="loginContainer">
             <label htmlFor="email">
