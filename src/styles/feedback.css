@@ -119,3 +119,25 @@
       0 640px #1d5117ae;
   }
 }
+
+@media screen and ( max-width : 900px ) {
+
+  .feedback-data-container {
+    width: 50%;
+  }
+
+  .buttons-container {
+    width: 50%;
+  }
+}
+
+@media screen and ( max-width : 600px ) {
+
+  .feedback-data-container {
+    width: 80%;
+  }
+
+  .buttons-container {
+    width: 80%;
+  }
+}
