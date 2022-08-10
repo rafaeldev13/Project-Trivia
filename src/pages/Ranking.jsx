@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import '../styles/ranking.css';
 
 class Ranking extends React.Component {
   constructor() {
@@ -27,17 +28,27 @@ class Ranking extends React.Component {
   render() {
     const { playerInfos } = this.state;
     return (
-      <>
-        <div data-testid="ranking-title">
-          Ranking
-        </div>
-        { playerInfos.map((player, i) => (
-          <div key={ i }>
-            <img src={ player.picture } alt={ player.name } />
-            <p data-testid={ `player-name-${i}` }>{ player.name }</p>
-            <p data-testid={ `player-score-${i}` }>{ player.score }</p>
+      <section>
+        <div className="box">
+          <div data-testid="ranking-title">
+            <h3>Ranking</h3>
           </div>
-        )) }
+          { playerInfos.map((player, i) => (
+            <div className="list" key={ i }>
+              <div className="imgBx">
+                <img src={ player.picture } alt={ player.name } />
+              </div>
+              <div className="content">
+                <h2 className="rank">
+                  <small>#</small>
+                  { i + 1 }
+                </h2>
+                <h4 data-testid={ `player-name-${i}` }>{ player.name }</h4>
+                <p data-testid={ `player-score-${i}` }>{ player.score }</p>
+              </div>
+            </div>
+          )) }
+        </div>
         <button
           type="button"
           data-testid="btn-go-home"
@@ -45,7 +56,7 @@ class Ranking extends React.Component {
         >
           Voltar para Home
         </button>
-      </>
+      </section>
     );
   }
 }
