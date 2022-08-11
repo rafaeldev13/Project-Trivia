@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import { findByText, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import he from 'he';
@@ -8,11 +8,11 @@ import questionsMock from './mock/questionsMock';
 import Game from '../pages/Game';
 import App from '../App';
 
-//mockar api
 jest.spyOn(global, 'fetch');
 global.fetch.mockResolvedValue({
   json: jest.fn().mockResolvedValue(questionsMock),
 });
+    
 
 describe('testar component Game', () => {
   it('verifica se a pergunta está na tela', async () => {
@@ -78,8 +78,8 @@ describe('testar component Game', () => {
 
   it('verifica se ao clicar no botão next, a próxima pergunta é apresentada na tela', async () => {
     const { history } = renderWithRouterAndRedux(<App />, {} , '/game');
-    await screen.findByText('Bern');
-    const firstButton = screen.getByRole('button', {name: /Bern/i});
+    await screen.findByText('Wien');
+    const firstButton = screen.getByRole('button', {name: /Wien/i});
     userEvent.click(firstButton);
     await screen.findByText('Next');
     let nextButton = screen.getByRole("button", { name: /next/i });
@@ -115,5 +115,17 @@ describe('testar component Game', () => {
 
     const { pathname } = history.location;
     expect(pathname).toBe('/feedback');
+  })
+
+  it('se api retornar vazio, ele volta para /', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue({results: []}),
+    });
+
+    const { history } = renderWithRouterAndRedux(<App />, {}, '/game');
+    await screen.findByText('Quiz!?');
+    const { pathname } = history.location;
+    expect(pathname).toBe('/');
   })
 })

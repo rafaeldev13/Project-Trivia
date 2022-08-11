@@ -51,7 +51,7 @@ const questions = {
     {
       category: 'Science: Computers',
       type: 'multiple',
-      difficulty: 'medium',
+      difficulty: 'hard',
       question: 'What does the &#039;S&#039; in the RSA encryption algorithm stand for?',
       correct_answer: 'Shamir',
       incorrect_answers: [
